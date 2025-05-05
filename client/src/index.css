@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-slate-50 text-slate-700;
+  }
+
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 215 16% 47%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 215 16% 47%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 16% 47%;
+    
+    --primary: 223 100% 25%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 215 16% 47%;
+    
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 25% 65%;
+    
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 215 16% 47%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 16% 47%;
+    
+    --radius: 0.5rem;
+
+    /* Custom colors */
+    --clean: 142 76% 45%;
+    --dirty: 0 84% 60%;
+    --occupied: 33 93% 54%;
+    --premium: 238 83% 60%;
+    --critical: 0 84% 60%;
+    --minor: 33 93% 54%;
+    --other: 215 25% 47%;
+  }
+}
+
+@layer components {
+  .status-badge {
+    @apply px-3 py-1 text-sm rounded-full font-medium transition-all duration-200;
+  }
+  
+  .status-badge:hover {
+    @apply transform scale-105;
+  }
+  
+  .house-card {
+    @apply transition-all duration-200;
+  }
+  
+  .house-card:hover {
+    @apply transform -translate-y-0.5 shadow-lg;
+  }
+  
+  .tooltip {
+    @apply invisible opacity-0 transition-opacity duration-300;
+  }
+  
+  .tooltip-trigger:hover .tooltip {
+    @apply visible opacity-100;
+  }
+}
