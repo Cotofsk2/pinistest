@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface HouseCardProps {
   house: House;
-  onStatusChange: (houseId: number, status: Status) => void;
+  onStatusChange: (houseId: number, updates: { status?: Status; Checks?: Checks }) => void;
   onAddNoteClick: (house: House) => void;
 }
 
@@ -150,7 +150,7 @@ export default function HouseCard({ house, onStatusChange, onAddNoteClick }: Hou
                 ? "bg-[hsl(var(--clean))] text-white" 
                 : "bg-slate-100 text-slate-700"
             )}
-            onClick={() => onStatusChange(house.id, "clean")}
+            onClick={() => onStatusChange(house.id, { status: "clean" })}
           >
             Limpia
           </button>
@@ -161,7 +161,7 @@ export default function HouseCard({ house, onStatusChange, onAddNoteClick }: Hou
                 ? "bg-[hsl(var(--dirty))] text-white" 
                 : "bg-slate-100 text-slate-700"
             )}
-            onClick={() => onStatusChange(house.id, "dirty")}
+            onClick={() => onStatusChange(house.id, { status: "dirty" })}
           >
             Sucia
           </button>
@@ -172,9 +172,51 @@ export default function HouseCard({ house, onStatusChange, onAddNoteClick }: Hou
                 ? "bg-[hsl(var(--occupied))] text-white" 
                 : "bg-slate-100 text-slate-700"
             )}
-            onClick={() => onStatusChange(house.id, "occupied")}
+            onClick={() => onStatusChange(house.id, { status: "occupied" })}
           >
             Ocupada
+          </button>
+        </div>
+
+        <div className="flex gap-1 mb-2">
+          <button 
+            className={cn(
+              "status-badge text-xs py-0.5 px-1.5",
+              house.Checks === "Check-in" 
+                ? "bg-purple-600 text-white" 
+                : "bg-slate-100 text-slate-700"
+            )}
+            onClick={() => onStatusChange(house.id, { 
+              Checks: house.Checks === "Check-in" ? "Nada" : "Check-in" 
+            })}
+          >
+            Check-in
+          </button>
+          <button 
+            className={cn(
+              "status-badge text-xs py-0.5 px-1.5",
+              house.Checks === "Check-out" 
+                ? "bg-cyan-600 text-white" 
+                : "bg-slate-100 text-slate-700"
+            )}
+            onClick={() => onStatusChange(house.id, { 
+              Checks: house.Checks === "Check-out" ? "Nada" : "Check-out" 
+            })}
+          >
+            Check-out
+          </button>
+          <button 
+            className={cn(
+              "status-badge text-xs py-0.5 px-1.5",
+              house.Checks === "Check-in Check-out" 
+                ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white" 
+                : "bg-slate-100 text-slate-700"
+            )}
+            onClick={() => onStatusChange(house.id, { 
+              Checks: house.Checks === "Check-in Check-out" ? "Nada" : "Check-in Check-out" 
+            })}
+          >
+            Check-in/out
           </button>
         </div>
         

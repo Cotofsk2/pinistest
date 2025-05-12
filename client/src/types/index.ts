@@ -9,7 +9,9 @@ export enum Classification {
 }
 
 export type Status = "clean" | "dirty" | "occupied";
+export type Checks = "Check-in" | "Check-out" | "Check-in Check-out" | "Nada";
 export type NoteCategory = "critical" | "minor" | "other";
+export type NoteArea = "gasfiteria" | "electricidad" | "reposicion" | "otro";
 
 export interface Note {
   id: number;

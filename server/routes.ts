@@ -54,7 +54,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "House not found" });
       }
 
-      const updatedHouse = await storage.updateHouseStatus(id, validatedData.data.status);
+      const updatedHouse = await storage.updateHouseStatus(id, validatedData.data);
       return res.status(200).json(updatedHouse);
     } catch (error) {
       console.error("Error updating house status:", error);
@@ -86,11 +86,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid house ID" });
       }
 
-      const validationSchema = insertNoteSchema.omit({ id: true, houseId: true, createdAt: true });
-      const validatedData = validationSchema.safeParse(req.body);
+      console.log("Datos recibidos:", req.body);
 
+      const validationSchema = insertNoteSchema.omit({ 
+        id: true, 
+        houseId: true, 
+        createdAt: true 
+      }).required({
+        area: true,
+        category: true,
+        content: true
+      });
+
+      const validatedData = validationSchema.safeParse(req.body);
       if (!validatedData.success) {
-        return res.status(400).json({ error: validatedData.error.errors });
+        console.error("Error de validación:", validatedData.error);
+        return res.status(400).json({ 
+          error: "Datos inválidos",
+          details: validatedData.error.errors 
+        });
       }
 
       const house = await storage.getHouseById(id);
@@ -100,7 +114,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const newNote = await storage.addNote(id, {
         ...validatedData.data,
-        category: validatedData.data.category,
         houseId: id,
         createdBy: "system"
       });

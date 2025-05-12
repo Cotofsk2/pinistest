@@ -1,3 +1,24 @@
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .border.rounded-lg, 
+  .border.rounded-lg * {
+    visibility: visible;
+  }
+  .border.rounded-lg {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  thead, 
+  td:first-child,
+  th:first-child {
+    display: none !important;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,32 +35,32 @@
   :root {
     --background: 210 40% 98%;
     --foreground: 215 16% 47%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 215 16% 47%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 215 16% 47%;
-    
+
     --primary: 223 100% 25%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 215 16% 47%;
-    
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215 25% 65%;
-    
+
     --accent: 210 40% 96.1%;
     --accent-foreground: 215 16% 47%;
-    
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 215 16% 47%;
-    
+
     --radius: 0.5rem;
 
     /* Custom colors */
@@ -53,27 +74,45 @@
   }
 }
 
+@keyframes border-color {
+  0% { box-shadow: inset 0 0 0 3px #9B51E0; } /* Comienza morado */
+  30% { box-shadow: inset 0 0 0 3px #9B51E0; } /* Mantiene morado */
+  50% { box-shadow: inset 0 0 0 3px #56CCF2; } /* Transición suave a azul */
+  70% { box-shadow: inset 0 0 0 3px #56CCF2; } /* Mantiene azul */
+  100% { box-shadow: inset 0 0 0 3px #9B51E0; } /* Vuelve suavemente a morado */
+}
+
 @layer components {
+  .animate-border-color {
+    animation: border-color 6s infinite ease-in-out; /* Tiempo reducido a 6s */
+  }
+
+  .inset-border-purple {
+    box-shadow: inset 0 0 0 3px #9B51E0;
+  }
+  .inset-border-blue {
+    box-shadow: inset 0 0 0 3px #56CCF2;
+  }
   .status-badge {
     @apply px-3 py-1 text-sm rounded-full font-medium transition-all duration-200;
   }
-  
+
   .status-badge:hover {
     @apply transform scale-105;
   }
-  
+
   .house-card {
     @apply transition-all duration-200;
   }
-  
+
   .house-card:hover {
     @apply transform -translate-y-0.5 shadow-lg;
   }
-  
+
   .tooltip {
     @apply invisible opacity-0 transition-opacity duration-300;
   }
-  
+
   .tooltip-trigger:hover .tooltip {
     @apply visible opacity-100;
   }

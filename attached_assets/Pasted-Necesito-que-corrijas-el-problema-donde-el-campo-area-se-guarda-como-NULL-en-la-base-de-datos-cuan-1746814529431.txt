@@ -1,0 +1,92 @@
+Necesito que corrijas el problema donde el campo 'area' se guarda como NULL en la base de datos cuando se agrega una nueva nota, a pesar de que el combobox en el frontend funciona correctamente. Aquí están los detalles técnicos:
+
+1. PROBLEMA ACTUAL:
+- Combobox muestra opciones: "gasfiteria", "electricidad", "reposicion", "otro"
+- El valor seleccionado no persiste en PostgreSQL (queda NULL)
+- La columna y enum ya existen en la DB
+
+2. ARCHIVOS A MODIFICAR:
+
+// ARCHIVO 1: routes.ts
+// Reemplazar el endpoint POST /api/houses/:id/notes con:
+
+app.post("/api/houses/:id/notes", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "Invalid house ID" });
+
+    console.log("Datos recibidos:", req.body); // Log diagnóstico
+
+    const validationSchema = insertNoteSchema.omit({ 
+      id: true,
+      houseId: true,
+      createdAt: true
+    }).required({
+      area: true // Forzar validación del área
+    });
+
+    const validatedData = validationSchema.safeParse(req.body);
+    if (!validatedData.success) {
+      console.error("Error validación:", validatedData.error);
+      return res.status(400).json({ error: validatedData.error.errors });
+    }
+
+    const newNote = await storage.addNote(id, {
+      ...validatedData.data,
+      houseId: id,
+      createdBy: "system"
+    });
+
+    console.log("Nota creada:", newNote); // Log confirmación
+    return res.status(201).json(newNote);
+
+  } catch (error) {
+    console.error("Error completo:", error);
+    return res.status(500).json({ error: "Failed to add note" });
+  }
+});
+
+// ARCHIVO 2: storage.ts
+// Modificar la función addNote:
+
+addNote: async (houseId: number, noteData: Omit<InsertNote, "id" | "createdAt">) => {
+  try {
+    const fullData = {
+      ...noteData,
+      houseId,
+      createdBy: noteData.createdBy || "system",
+      area: noteData.area || "otro" // Fallback explícito
+    };
+
+    console.log("Datos para insertar:", fullData); // Log diagnóstico
+
+    const parsedNote = insertNoteSchema.parse(fullData);
+    const [newNote] = await db.insert(notes).values(parsedNote).returning();
+    return newNote;
+
+  } catch (error) {
+    console.error("Error en addNote:", error);
+    throw error;
+  }
+},
+
+// ARCHIVO 3: AddNoteModal.tsx
+// Añadir validación en handleSubmit:
+
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!category || !content.trim() || !area) {
+    alert("Completa todos los campos, incluyendo el área");
+    return;
+  }
+  console.log("Enviando nota:", { category, content, area }); // Log diagnóstico
+  onSave(category, content, area);
+};
+
+3. VERIFICACIONES ADICIONALES:
+- Ejecutar en PostgreSQL:
+  ```sql
+  SELECT enum_range(NULL::note_area);
+  SELECT column_name, is_nullable, column_default 
+  FROM information_schema.columns 
+  WHERE table_name = 'notes' AND column_name = 'area';

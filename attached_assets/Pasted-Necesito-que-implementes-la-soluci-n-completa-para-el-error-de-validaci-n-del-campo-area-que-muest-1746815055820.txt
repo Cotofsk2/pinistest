@@ -1,0 +1,107 @@
+Necesito que implementes la solución completa para el error de validación del campo 'area' que muestra: 
+"Error al añadir nota 400: {"error":[{"expected":"'gasfitería' | 'electricidad' | 'reposición' | 'otro'", "received":"undefined"..."
+
+Aquí está la solución completa que debes implementar:
+
+1. PRIMERO: Verificar frontend (AddNoteModal.tsx)
+- Asegurar que el combobox envía el valor correctamente
+- Agregar console.log para depuración
+
+// Código actualizado para AddNoteModal.tsx:
+interface SubmitData {
+  category: NoteCategory;
+  content: string;
+  area: string; // Asegurar tipo string
+}
+
+const [formData, setFormData] = useState<SubmitData>({
+  category: "critical",
+  content: "",
+  area: "otro" // Valor por defecto
+});
+
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  console.log("Datos a enviar:", formData); // Verificar en consola
+  if (!formData.area || !formData.content.trim()) {
+    alert("Selecciona un área y escribe el contenido");
+    return;
+  }
+  onSave(formData);
+};
+
+// En el combobox:
+<Select
+  value={formData.area}
+  onValueChange={(value) => setFormData({...formData, area: value})}
+>
+
+2. SEGUNDO: Actualizar backend (routes.ts)
+// Endpoint actualizado:
+app.post("/api/houses/:id/notes", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    console.log("Datos recibidos:", req.body); // Log diagnóstico
+
+    const schema = z.object({
+      category: z.enum(["critical", "minor", "other"]),
+      content: z.string().min(1),
+      area: z.enum(["gasfiteria", "electricidad", "reposicion", "otro"])
+    });
+
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      console.error("Error validación:", result.error);
+      return res.status(400).json({ 
+        error: "Datos inválidos",
+        details: result.error.errors 
+      });
+    }
+
+    const newNote = await storage.addNote(id, {
+      ...result.data,
+      houseId: id,
+      createdBy: "system"
+    });
+
+    return res.status(201).json(newNote);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ error: "Error al guardar nota" });
+  }
+});
+
+3. TERCERO: Modificar storage.ts
+// Función addNote actualizada:
+addNote: async (houseId: number, noteData: {
+  category: "critical" | "minor" | "other";
+  content: string;
+  area: string;
+  createdBy?: string;
+}) => {
+  // Validación adicional
+  const validAreas = ["gasfiteria", "electricidad", "reposicion", "otro"];
+  const area = validAreas.includes(noteData.area) 
+    ? noteData.area 
+    : "otro";
+
+  const [newNote] = await db.insert(notes).values({
+    ...noteData,
+    houseId,
+    area, // Aseguramos valor válido
+    createdBy: noteData.createdBy || "system"
+  }).returning();
+
+  return newNote;
+}
+
+4. PASOS ADICIONALES:
+- Verificar que los valores del combobox coincidan EXACTAMENTE con el enum
+- Asegurar que no hay diferencias de mayúsculas/minúsculas o tildes
+- Revisar la estructura de la tabla notes en PostgreSQL con:
+  ```sql
+  SELECT column_name, data_type, is_nullable 
+  FROM information_schema.columns 
+  WHERE table_name = 'notes';

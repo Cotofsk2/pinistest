@@ -61,11 +61,12 @@ export default function ReadOnlyHouseCard({ house, size }: ReadOnlyHouseCardProp
   return (
     <div 
       className={cn(
-        "flex flex-col bg-white rounded-md shadow-sm border overflow-hidden",
+        "flex flex-col bg-white rounded-md shadow-sm overflow-hidden",
         "hover:shadow-md transition-all duration-200",
-        house.status === "clean" ? "border-green-100" :
-        house.status === "dirty" ? "border-red-100" :
-        "border-amber-100"
+        house.Checks === "Check-in" && "!shadow-[inset_0_0_0_3px_#9B51E0]",
+        house.Checks === "Check-out" && "!shadow-[inset_0_0_0_3px_#56CCF2]",
+        house.Checks === "Check-in Check-out" && "animate-border-color",
+        house.Checks === "Nada" && ""
       )}
       style={{
         width: `${size}px`,

@@ -1,16 +1,18 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { House, NoteCategory } from "@/types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { House, NoteCategory, NoteArea } from "@/types";
 
 interface AddNoteModalProps {
   isOpen: boolean;
   house: House;
   onClose: () => void;
-  onSave: (category: NoteCategory, content: string) => void;
+  onSave: (category: NoteCategory, area: NoteArea, content: string) => void;
   isPending: boolean;
 }
 
@@ -21,20 +23,28 @@ export default function AddNoteModal({
   onSave,
   isPending 
 }: AddNoteModalProps) {
-  const [category, setCategory] = useState<NoteCategory>("critical");
-  const [content, setContent] = useState("");
+  const [formData, setFormData] = useState({
+    category: "critical" as NoteCategory,
+    area: "otro" as NoteArea,
+    content: ""
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!category || !content.trim()) {
+    console.log("Datos a enviar:", formData);
+    if (!formData.category || !formData.area || !formData.content.trim()) {
+      alert("Por favor completa todos los campos");
       return;
     }
-    onSave(category, content);
+    onSave(formData.category, formData.area as NoteArea, formData.content);
   };
 
   const handleClose = () => {
-    setCategory("critical");
-    setContent("");
+    setFormData({
+      category: "critical",
+      area: "otro",
+      content: ""
+    });
     onClose();
   };
 
@@ -49,8 +59,8 @@ export default function AddNoteModal({
           <div className="mb-4">
             <Label className="block text-sm font-medium text-slate-700 mb-1">Categoría de la Nota</Label>
             <RadioGroup 
-              value={category} 
-              onValueChange={(value) => setCategory(value as NoteCategory)}
+              value={formData.category} 
+              onValueChange={(value) => setFormData({...formData, category: value as NoteCategory})}
               className="flex gap-2"
             >
               <div className="flex items-center gap-2 p-2 rounded border cursor-pointer hover:bg-slate-50">
@@ -75,6 +85,21 @@ export default function AddNoteModal({
               </div>
             </RadioGroup>
           </div>
+
+          <div className="mb-4">
+            <Label className="block text-sm font-medium text-slate-700 mb-1">Área</Label>
+            <Select value={formData.area} onValueChange={(value: NoteArea) => setFormData({...formData, area: value})}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gasfiteria">Gasfitería</SelectItem>
+                <SelectItem value="electricidad">Electricidad</SelectItem>
+                <SelectItem value="reposicion">Reposición</SelectItem>
+                <SelectItem value="otro">Otro</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           
           <div className="mb-6">
             <Label htmlFor="note-content" className="block text-sm font-medium text-slate-700 mb-1">
@@ -83,8 +108,8 @@ export default function AddNoteModal({
             <Textarea 
               id="note-content" 
               rows={4} 
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={formData.content}
+              onChange={(e) => setFormData({...formData, content: e.target.value})}
               placeholder="Escribe tu nota aquí..." 
               className="w-full"
             />
@@ -100,7 +125,7 @@ export default function AddNoteModal({
             </Button>
             <Button 
               type="submit" 
-              disabled={!category || !content.trim() || isPending}
+              disabled={!formData.category || !formData.area || !formData.content.trim() || isPending}
               className="bg-blue-800 hover:bg-blue-900"
             >
               {isPending ? "Guardando..." : "Guardar Nota"}

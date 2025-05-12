@@ -15,9 +15,22 @@ export default function HouseGrid({
   onStatusChange, 
   onAddNoteClick 
 }: HouseGridProps) {
-  // Filter houses by type
-  const indoorHouses = houses.filter(house => house.type === HouseType.INDOOR);
-  const outdoorHouses = houses.filter(house => house.type === HouseType.OUTDOOR);
+  // Filter and sort houses by type and number
+  const indoorHouses = houses
+    .filter(house => house.type === HouseType.INDOOR)
+    .sort((a, b) => {
+      const numA = parseInt(a.name.replace("Casa ", ""));
+      const numB = parseInt(b.name.replace("Casa ", ""));
+      return numA - numB;
+    });
+    
+  const outdoorHouses = houses
+    .filter(house => house.type === HouseType.OUTDOOR)
+    .sort((a, b) => {
+      const numA = parseInt(a.name.replace("Casa ", ""));
+      const numB = parseInt(b.name.replace("Casa ", ""));
+      return numA - numB;
+    });
   
   // Count premium houses
   const premiumHouses = outdoorHouses.filter(house => house.name.includes("5") || house.name.includes("8") || house.name.includes("11"));

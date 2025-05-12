@@ -34,23 +34,20 @@ export const storage = {
     return house;
   },
 
-  updateHouseStatus: async (id: number, status: "clean" | "dirty" | "occupied"): Promise<House> => {
+  updateHouseStatus: async (id: number, updates: { status?: "clean" | "dirty" | "occupied"; Checks?: string }): Promise<House> => {
     const [updatedHouse] = await db
       .update(houses)
-      .set({ 
-        status, 
-        updatedAt: new Date() 
-      })
+      .set(updates)
       .where(eq(houses.id, id))
       .returning();
-    
+
     const houseWithNotes = await db.query.houses.findFirst({
       where: eq(houses.id, id),
       with: {
         notes: true
       }
     });
-    
+
     return houseWithNotes!;
   },
 
@@ -71,19 +68,26 @@ export const storage = {
   },
 
   addNote: async (houseId: number, noteData: Omit<InsertNote, "id" | "createdAt">): Promise<Note> => {
-    // Validate the note data
-    const parsedNote = insertNoteSchema.parse({
-      ...noteData,
-      houseId,
-      createdBy: noteData.createdBy || "system"
-    });
-    
-    const [newNote] = await db
-      .insert(notes)
-      .values(parsedNote)
-      .returning();
-    
-    return newNote;
+    try {
+      const validAreas = ["gasfiteria", "electricidad", "reposicion", "otro"] as const;
+      const area = validAreas.includes(noteData.area as any) ? noteData.area : "otro";
+
+      const fullData = {
+        ...noteData,
+        houseId,
+        area,
+        createdBy: noteData.createdBy || "system"
+      };
+
+      console.log("Data to insert:", fullData);
+
+      const parsedNote = insertNoteSchema.parse(fullData);
+      const [newNote] = await db.insert(notes).values(parsedNote).returning();
+      return newNote;
+    } catch (error) {
+      console.error("Error in addNote:", error);
+      throw error;
+    }
   },
 
   deleteNote: async (id: number): Promise<void> => {

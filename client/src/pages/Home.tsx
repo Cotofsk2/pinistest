@@ -3,9 +3,11 @@ import Header from "@/components/Header";
 import FilterControls from "@/components/FilterControls";
 import HouseGrid from "@/components/HouseGrid";
 import AddNoteModal from "@/components/AddNoteModal";
+import Reports from "@/components/Reports";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
-import { House, HouseType, Classification, Status, NoteCategory } from "@/types";
+import { House, HouseType, Classification, Status, NoteCategory, NoteArea } from "@/types";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -15,7 +17,7 @@ export default function Home() {
     status: "all",
     notes: "all"
   });
-  
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
   const { toast } = useToast();
@@ -27,8 +29,14 @@ export default function Home() {
 
   // Update house status mutation
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ houseId, status }: { houseId: number, status: Status }) => {
-      return apiRequest("PATCH", `/api/houses/${houseId}/status`, { status });
+    mutationFn: async ({ 
+      houseId, 
+      updates 
+    }: { 
+      houseId: number, 
+      updates: { status?: Status; Checks?: Checks }
+    }) => {
+      return apiRequest("PATCH", `/api/houses/${houseId}/status`, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/houses"] });
@@ -50,14 +58,16 @@ export default function Home() {
   const addNoteMutation = useMutation({
     mutationFn: async ({ 
       houseId, 
-      category, 
+      category,
+      area,
       content 
     }: { 
       houseId: number, 
-      category: NoteCategory, 
+      category: NoteCategory,
+      area: NoteArea,
       content: string 
     }) => {
-      return apiRequest("POST", `/api/houses/${houseId}/notes`, { category, content });
+      return apiRequest("POST", `/api/houses/${houseId}/notes`, { category, area, content });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/houses"] });
@@ -76,8 +86,8 @@ export default function Home() {
     }
   });
 
-  const handleStatusChange = (houseId: number, status: Status) => {
-    updateStatusMutation.mutate({ houseId, status });
+  const handleStatusChange = (houseId: number, updates: { status?: Status; Checks?: Checks }) => {
+    updateStatusMutation.mutate({ houseId, updates });
   };
 
   const handleAddNoteClick = (house: House) => {
@@ -85,12 +95,13 @@ export default function Home() {
     setModalOpen(true);
   };
 
-  const handleAddNote = (category: NoteCategory, content: string) => {
+  const handleAddNote = (category: NoteCategory, area: NoteArea, content: string) => {
     if (!selectedHouse) return;
-    
+
     addNoteMutation.mutate({
       houseId: selectedHouse.id,
       category,
+      area,
       content
     });
   };
@@ -114,31 +125,41 @@ export default function Home() {
       if (filters.houseType === "indoor" && house.type !== HouseType.INDOOR) return false;
       if (filters.houseType === "outdoor" && house.type !== HouseType.OUTDOOR) return false;
     }
-    
+
     // Status filter
     if (filters.status !== "all" && house.status !== filters.status) return false;
-    
+
     // Notes filter
     if (filters.notes === "with-notes" && (!house.notes || house.notes.length === 0)) return false;
     if (filters.notes === "no-notes" && house.notes && house.notes.length > 0) return false;
     if (filters.notes === "critical" && (!house.notes || !house.notes.some(note => note.category === "critical"))) return false;
     if (filters.notes === "minor" && (!house.notes || !house.notes.some(note => note.category === "minor"))) return false;
-    
+
     return true;
   });
 
   return (
     <div className="min-h-screen">
       <Header username="Personal" />
-      <FilterControls filters={filters} onFilterChange={handleFilterChange} />
-      
-      <HouseGrid 
-        houses={filteredHouses} 
-        isLoading={isLoading}
-        onStatusChange={handleStatusChange} 
-        onAddNoteClick={handleAddNoteClick}
-      />
-      
+      <Tabs defaultValue="houses" className="px-4 flex flex-col items-center">
+        <TabsList>
+          <TabsTrigger value="houses">Casas</TabsTrigger>
+          <TabsTrigger value="reports">Informes</TabsTrigger>
+        </TabsList>
+        <TabsContent value="houses">
+          <FilterControls filters={filters} onFilterChange={handleFilterChange} />
+          <HouseGrid 
+            houses={filteredHouses} 
+            isLoading={isLoading}
+            onStatusChange={handleStatusChange} 
+            onAddNoteClick={handleAddNoteClick}
+          />
+        </TabsContent>
+        <TabsContent value="reports">
+          <Reports />
+        </TabsContent>
+      </Tabs>
+
       {selectedHouse && (
         <AddNoteModal 
           isOpen={modalOpen} 

@@ -1,0 +1,87 @@
+Problema Actual:
+El combobox para seleccionar área (gasfitería/electricidad/reposición/otro) se muestra correctamente en el frontend (AddNoteModal.tsx), pero al guardar la nota, el campo area se guarda como NULL en PostgreSQL a pesar de que:
+
+La columna area (tipo note_area) ya existe en la tabla notes
+
+El enum note_area tiene los valores correctos
+
+El schema de Zod/Drizzle está configurado
+
+Objetivo:
+Garantizar que el valor seleccionado en el combobox se persista correctamente en la DB.
+
+Archivos Críticos a Revisar:
+
+routes.ts - Endpoint POST /api/houses/:id/notes
+
+storage.ts - Función addNote
+
+AddNoteModal.tsx - Manejo del estado del área
+
+Tareas Específicas:
+
+En routes.ts:
+
+typescript
+// VERIFICAR QUE:
+// 1. El validationSchema no esté omitiendo el campo 'area'
+// 2. req.body.area se esté pasando correctamente a storage.addNote
+// SOLUCIÓN PROPUESTA:
+const validationSchema = insertNoteSchema.omit({
+  id: true,
+  houseId: true,
+  createdAt: true
+}).required({ area: true }); // Forzar inclusión del área
+En storage.ts:
+
+typescript
+// MODIFICAR addNote para:
+// 1. Validar explícitamente el campo area
+// 2. Establecer valor por defecto 'otro' si viene undefined
+const parsedNote = insertNoteSchema.parse({
+  ...noteData,
+  area: noteData.area || 'otro', // Fallback explícito
+  houseId,
+  createdBy: 'system'
+});
+En AddNoteModal.tsx:
+
+typescript
+// AGREGAR validación:
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (!area) { // Validación adicional
+    return alert('Selecciona un área');
+  }
+  onSave(category, content, area);
+};
+Requisitos Adicionales:
+
+Agregar logs de diagnóstico en el backend:
+
+typescript
+console.log('Datos recibidos:', { 
+  body: req.body,
+  area: req.body.area 
+});
+Verificar el schema de la tabla en PostgreSQL con:
+
+sql
+SELECT column_name, column_default, is_nullable 
+FROM information_schema.columns 
+WHERE table_name = 'notes';
+Entregables Esperados:
+
+Código completo de los 3 archivos modificados
+
+Confirmación de que:
+
+El campo area ahora persiste correctamente
+
+Los valores posibles coinciden con el enum note_area
+
+Recomendación para migración (si aplica):
+
+sql
+ALTER TABLE notes ALTER COLUMN area SET NOT NULL;
+ALTER TABLE notes ALTER COLUMN area SET DEFAULT 'otro';
