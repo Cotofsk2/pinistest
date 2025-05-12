@@ -7,8 +7,8 @@ export default function Header({ username }: HeaderProps) {
     <header className="bg-white shadow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-blue-800">Gestión de Casas del Hotel</h1>
-          <p className="text-sm text-slate-500">Portal de Comunicación del Personal</p>
+          <h1 className="text-2xl font-bold text-blue-800">Test Pinares Test</h1>
+          <p className="text-sm text-slate-500">TEST V2.7 debug database, implementado boquillas, cbx y nodejs para consultas</p>
         </div>
         <div className="flex items-center gap-4">
           <a 
