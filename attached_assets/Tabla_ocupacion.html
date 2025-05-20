@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 4px 8px;
+            text-align: center;
+            height: 8px;
+            line-height: 1.2;
+        }
+        .header {
+            background-color: #000;
+            color: white;
+        }
+        .interior-row {
+            background-color: #dbdabe;
+        }
+        .exterior-row {
+            background-color: #dbdabe;
+        }
+        .status {
+            width: 100px;
+        }
+        .section-spacer {
+            width: 20px;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+        }
+        .house-cell {
+            width: 100px;
+        }
+        .data-cell {
+            min-width: 50px;
+        }
+        tr {
+            height: 8px;
+        }
+        .tables-container {
+            display: flex;
+            align-items: flex-start;
+        }
+        .observations-table {
+            margin-left: 20px;
+        }
+        .observations-header {
+            background-color: #000;
+            color: white;
+            width: 150px;
+            height: 34px;
+        }
+        .observations-cell {
+            width: 150px;
+            height: 33px;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .occupation-table {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <table class="occupation-table">
+        <tr>
+            <th colspan="2" class="header">OCUPACION DIARIA</th>
+        </tr>
+        <tr>
+            <td>Casas interiores</td>
+            <td class="data-cell"></td>
+        </tr>
+        <tr>
+            <td>Casas exteriores</td>
+            <td class="data-cell"></td>
+        </tr>
+        <tr>
+            <td><strong>Total de casas</strong></td>
+            <td class="data-cell"></td>
+        </tr>
+    </table>
+    
+    <div class="title">Casas pinares de higuerillas - FECHA</div>
+</div>
+
+<div class="tables-container">
+    <table>
+        <tr>
+            <th class="header house-cell">Casas interiores</th>
+            <th class="header status">Estado</th>
+            <th class="section-spacer"></th>
+            <th class="header house-cell">Casas exteriores</th>
+            <th class="header status">Estado</th>
+        </tr>
+        <!-- Casas interiores 1-11 y exteriores 1-11 -->
+        <tr>
+            <td class="interior-row house-cell">Casa 1</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 1</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 2</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 2</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 3</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 3</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 4</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 4</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 5</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 5</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 6</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 6</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 7</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 7</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 8</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 8</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 9</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 9</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 10</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 10</td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 11</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+            <td class="exterior-row house-cell">Casa 11</td>
+            <td class="status"></td>
+        </tr>
+        <!-- Continuación solo casas interiores 12-34 -->
+        <tr>
+            <td class="interior-row house-cell">Casa 12</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 13</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 14</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 15</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 16</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 17</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 18</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 19</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 20</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 21</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 22</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 23</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 24</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 25</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 26</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 27</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 28</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 29</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 30</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 31</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 32</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 33</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+        <tr>
+            <td class="interior-row house-cell">Casa 34</td>
+            <td class="status"></td>
+            <td class="section-spacer"></td>
+        </tr>
+    </table>
+
+    <table class="observations-table">
+        <tr>
+            <th class="observations-header">Observaciones</th>
+        </tr>
+        <tr>
+            <td class="observations-cell"></td>
+        </tr>
+        <tr>
+            <td class="observations-cell"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

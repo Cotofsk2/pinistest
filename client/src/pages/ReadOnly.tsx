@@ -12,6 +12,7 @@ export default function ReadOnly() {
   // Fetch houses data
   const { data: houses = [], isLoading } = useQuery({
     queryKey: ["/api/houses"],
+    refetchInterval: 30000, // Refresca cada 30 segundos
   });
 
   // Filter houses based on selected filters

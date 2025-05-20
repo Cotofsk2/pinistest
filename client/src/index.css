@@ -29,24 +29,24 @@
   }
 
   body {
-    @apply font-sans antialiased bg-slate-50 text-slate-700;
+    @apply font-sans antialiased bg-slate-100 text-slate-800;
   }
 
   :root {
-    --background: 210 40% 98%;
-    --foreground: 215 16% 47%;
+    --background: 210 40% 96%;
+    --foreground: 215 16% 30%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 16% 47%;
+    --card: 0 0% 98%;
+    --card-foreground: 215 16% 30%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 16% 47%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 215 16% 30%;
 
-    --primary: 223 100% 25%;
+    --primary: 223 90% 30%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 215 16% 47%;
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 215 16% 30%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215 25% 65%;
